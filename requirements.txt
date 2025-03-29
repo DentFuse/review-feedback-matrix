@@ -1,0 +1,11 @@
+# Backend dependencies
+flask
+nltk
+textblob
+pandas
+
+# Data visualization
+plotly
+
+# Optional but recommended
+gunicorn  # Production web server
