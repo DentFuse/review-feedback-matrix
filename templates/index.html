@@ -18,7 +18,20 @@
         .Positive-Unexpected { background-color: #cce5ff; color: #004085; }
         .Negative-Expected { background-color: #f8d7da; color: #721c24; }
         .Negative-Unexpected { background-color: #fff3cd; color: #856404; }
+        .center {display: flex; justify-content: center;}
+        .bold {font-weight: 800;}
     </style>
+    <script>
+        function clearForm() {
+            document.getElementById('amazon_url').value = '';
+            document.getElementById('description').value = '';
+            document.getElementById('reviews').value = '';
+        
+            document.getElementById('amazon_url').removeAttribute('readonly');
+            document.getElementById('description').removeAttribute('readonly');
+            document.getElementById('reviews').removeAttribute('readonly');
+        }
+        </script>           
 </head>
 <body>
     <div class="container">
@@ -26,15 +39,32 @@
         
         <form method="POST">
             <div class="mb-3">
-                <label for="description" class="form-label">Product Description</label>
-                <textarea class="form-control" id="description" name="description" rows="3" required>{{ request.form.get('description', '') }}</textarea>
+                <label for="amazon_url" class="form-label">Amazon Product URL</label>
+                <input type="url" class="form-control" id="amazon_url" name="amazon_url"
+                    placeholder="Enter Amazon product URL"
+                    value="{{ amazon_url or '' }}"
+                    {% if lock_amazon %}readonly{% endif %}>
             </div>
+        
+            <div class="center bold"><span>OR</span></div>
+        
+            <div class="mb-3">
+                <label for="description" class="form-label">Product Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3"
+                            {% if lock_description %}readonly{% endif %}>{{ description or '' }}</textarea>
+            </div>
+        
             <div class="mb-3">
                 <label for="reviews" class="form-label">Reviews (one per line)</label>
-                <textarea class="form-control" id="reviews" name="reviews" rows="6" required>{{ request.form.get('reviews', '') }}</textarea>
+                <textarea class="form-control" id="reviews" name="reviews" rows="6"
+                            {% if lock_description %}readonly{% endif %}>{{ reviews_text or '' }}</textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Analyze Reviews</button>
-        </form>
+        
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Analyze Reviews</button>
+                <button type="button" class="btn btn-secondary" onclick="clearForm()">Clear</button>
+            </div>
+        </form>           
 
         {% if reviews %}
             <div class="row mt-4">
